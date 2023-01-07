@@ -6,7 +6,7 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_DB: touhou_arrangement_chronicle_development
     ports:
-      - '25432:5432'
+      - '15432:5432'
     volumes:
       - postgres:/var/lib/postgresql/data
 
@@ -30,6 +30,25 @@ services:
       - db
     profiles:
       - extra
+
+  seeder:
+    image: golang:1.19
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+    profiles:
+      - extra
+    environment:
+      CONNECT_URL: "postgres://postgres:@db:5432/touhou_arrangement_chronicle_development?sslmode=disable"
+      BUNDEBUG: 1
+    volumes:
+      - .:/app
+    working_dir: /app/go
+    command:
+      - "go"
+      - "run"
+      - "cmd/seeder/main.go"
 
 volumes:
   postgres:
