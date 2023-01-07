@@ -1,0 +1,8 @@
+version: 2
+updates:
+  - package-ecosystem: "gomod"
+    directory: "./go/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 25
+    target-branch: "develop"
