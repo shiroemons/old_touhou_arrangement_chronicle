@@ -440,3 +440,17 @@ comment on column track_distribution_service_urls.service is '配信サービス
 comment on column track_distribution_service_urls.url is 'URL';
 comment on column track_distribution_service_urls.created_at is '作成日時';
 comment on column track_distribution_service_urls.updated_at is '更新日時';
+
+create table track_isrcs (
+    id         text                     not null primary key,
+    track_id   text                     not null references tracks(id),
+    isrc       text                     not null,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+create unique index uk_track_isrcs_track_id_isrc on track_isrcs (track_id, isrc);
+comment on table  track_isrcs is '楽曲ISRC';
+comment on column track_isrcs.track_id is 'トラックID';
+comment on column track_isrcs.isrc is 'ISRC(International Standard Recording Code): 国際標準レコーディングコード';
+comment on column track_isrcs.created_at is '作成日時';
+comment on column track_isrcs.updated_at is '更新日時';
