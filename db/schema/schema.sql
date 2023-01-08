@@ -100,3 +100,16 @@ comment on table  event_series is 'イベントシリーズ';
 comment on column event_series.name is '名前';
 comment on column event_series.created_at is '作成日時';
 comment on column event_series.updated_at is '更新日時';
+
+create table events (
+    id              text                     not null primary key,
+    event_series_id text                     not null references event_series(id),
+    name            text                     not null unique,
+    created_at      timestamp with time zone not null default current_timestamp,
+    updated_at      timestamp with time zone not null default current_timestamp
+);
+comment on table  events is 'イベント';
+comment on column events.event_series_id is 'イベントシリーズID';
+comment on column events.name is '名前';
+comment on column events.created_at is '作成日時';
+comment on column events.updated_at is '更新日時';
