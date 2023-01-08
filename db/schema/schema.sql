@@ -493,3 +493,16 @@ comment on column tracks_arrangers.track_id is 'トラックID';
 comment on column tracks_arrangers.artist_id is '編曲者ID(アーティストID)';
 comment on column tracks_arrangers.created_at is '作成日時';
 comment on column tracks_arrangers.updated_at is '更新日時';
+
+create table tracks_rearrangers (
+    track_id   text                     not null references tracks(id),
+    artist_id  text                     not null references artists(id),
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (track_id, artist_id)
+);
+comment on table  tracks_rearrangers is '楽曲再編曲者';
+comment on column tracks_rearrangers.track_id is 'トラックID';
+comment on column tracks_rearrangers.artist_id is '再編曲者ID(アーティストID)';
+comment on column tracks_rearrangers.created_at is '作成日時';
+comment on column tracks_rearrangers.updated_at is '更新日時';
