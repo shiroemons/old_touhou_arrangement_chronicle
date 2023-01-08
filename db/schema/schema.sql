@@ -4,6 +4,7 @@ create type product_type as enum (
     'zuns_music_collection',
     'akyus_untouched_score',
     'commercial_books',
+    'tasofro',
     'other'
 );
 
