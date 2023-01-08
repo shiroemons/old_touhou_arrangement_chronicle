@@ -113,3 +113,42 @@ comment on column events.event_series_id is 'イベントシリーズID';
 comment on column events.name is '名前';
 comment on column events.created_at is '作成日時';
 comment on column events.updated_at is '更新日時';
+
+create type event_status as enum (
+    'scheduled',    -- 開催済み
+    'cancelled',    -- 中止
+    'postpone',     -- 延期(開催日未定)
+    'rescheduled',  -- 延期(開催日決定)
+    'moved_online', -- オンライン開催に変更
+    'other'         -- その他
+);
+
+create type event_format as enum (
+    'offline', -- オフライン開催
+    'online',  -- オンライン開催
+    'mixed'   -- オフライン・オンライン両方開催
+);
+
+create table event_details (
+    event_id     text                     not null primary key references events(id),
+    event_status event_status             not null default 'scheduled'::event_status,
+    format       event_format             not null default 'offline'::event_format,
+    region_code  text                     not null default 'JP',
+    address      text                     not null default '',
+    description  text                     not null default '',
+    url          text                     not null default '',
+    twitter_url  text                     not null default '',
+    created_at   timestamp with time zone not null default current_timestamp,
+    updated_at   timestamp with time zone not null default current_timestamp
+);
+comment on table  event_details is 'イベント詳細';
+comment on column event_details.event_id is 'イベントID';
+comment on column event_details.event_status is 'ステータス/scheduled: 開催済み, cancelled: 中止, postpone: 延期(開催日未定), rescheduled: 延期(開催日決定), moved_online: オンライン開催に変更, other: その他/default: scheduled';
+comment on column event_details.format is '形式/offline: オフライン開催, online: オフライン開催, mixed: 両方開催/default: offline';
+comment on column event_details.region_code is 'リージョンコード/default: JP';
+comment on column event_details.address is '開催場所';
+comment on column event_details.description is '説明';
+comment on column event_details.url is 'URL';
+comment on column event_details.twitter_url is 'Twitter URL';
+comment on column event_details.created_at is '作成日時';
+comment on column event_details.updated_at is '更新日時';
