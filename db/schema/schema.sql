@@ -181,3 +181,27 @@ comment on column sub_event_details.event_status is 'ステータス/scheduled: 
 comment on column sub_event_details.description is '説明';
 comment on column sub_event_details.created_at is '作成日時';
 comment on column sub_event_details.updated_at is '更新日時';
+
+create type initial_letter_type as enum (
+    'symbol',   -- 記号
+    'number',   -- 数字
+    'alphabet', -- 英字
+    'kana',     -- かな(ひらがな・カタカナ)
+    'kanji',    -- 漢字
+    'other'     -- その他
+);
+
+create table artists (
+    id                    text                     not null primary key,
+    name                  text                     not null,
+    initial_letter_type   initial_letter_type      not null,
+    initial_letter_detail text                     not null,
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  artists is 'アーティスト';
+comment on column artists.name is '名前';
+comment on column artists.initial_letter_type is '頭文字の文字種別(symbol,number,alphabet,kana,kanji,other)';
+comment on column artists.initial_letter_detail is '開催日';
+comment on column artists.created_at is '作成日時';
+comment on column artists.updated_at is '更新日時';
