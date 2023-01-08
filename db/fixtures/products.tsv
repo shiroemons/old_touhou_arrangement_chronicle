@@ -39,7 +39,7 @@ id	name	short_name	product_type	series_number
 0307	鳥船遺跡　～ Trojan Green Asteroid	鳥船遺跡	zuns_music_collection	6.0
 0308	伊弉諾物質　～ Neo-traditionalism of Japan.	伊弉諾物質	zuns_music_collection	7.0
 0309	燕石博物誌　～ Dr.Latency's Freak Report.	燕石博物誌	zuns_music_collection	8.0
-0310	"旧約酒場　～ Dateless Bar ""Old Adam""."	旧約酒場	zuns_music_collection	9.0
+0310	旧約酒場　～ Dateless Bar "Old Adam".	旧約酒場	zuns_music_collection	9.0
 0311	虹色のセプテントリオン	虹色のセプテントリオン	zuns_music_collection	9.5
 0401	幺樂団の歴史1　～ Akyu's Untouched Score vol.1	幺樂団の歴史	akyus_untouched_score	1.0
 0402	幺樂団の歴史2　～ Akyu's Untouched Score vol.2	幺樂団の歴史	akyus_untouched_score	2.0
@@ -57,18 +57,22 @@ id	name	short_name	product_type	series_number
 0509	東方三月精　～ Oriental Sacred Place. 第1巻	東方三月精	commercial_books	9.0
 0510	東方三月精　～ Oriental Sacred Place. 第2巻	東方三月精	commercial_books	10.0
 0511	東方鈴奈庵　～ Forbidden Scrollery. 第6巻特装版	東方鈴奈庵	commercial_books	11.0
-0600	プロジェクト・ジャイアン	プロジェクト・ジャイアン	other	1.0
-0601	東方幻想的音楽	東方幻想的音楽	other	2.0
-0602	秋霜玉	秋霜玉	other	3.0
-0603	稀翁玉	稀翁玉	other	4.0
-0604	トルテルマジック	トルテルマジック	other	5.0
-0605	Cradle - 東方幻樂祀典 -	Cradle - 東方幻樂祀典 -	other	6.0
-0606	黄昏酒場～Uwabami Breakers～	黄昏酒場	other	7.0
-0607	神魔討綺伝 ～ Magus in Mystic Geometries.	神魔討綺伝	other	8.0
-0608	東方幻想麻雀 - Touhou Unreal Mahjong	東方幻想麻雀	other	9.0
-0609	核熱造神ヒソウテンソク 東方非想天則 ORIGINAL SOUND TRACK	核熱造神ヒソウテンソク	other	10.0
-0610	深秘的楽曲集・補	深秘的楽曲集・補	other	11.0
-0611	暗黒能楽集・心綺楼　東方心綺楼 ORIGINAL SOUNDTRACK	暗黒能楽集・心綺楼	other	12.0
-0612	完全憑依ディスコグラフィ　東方憑依華 ORIGINAL SOUND TRACK	完全憑依ディスコグラフィ	other	13.0
-0613	東方オトハナビ	東方オトハナビ	other	13.0
-0699	その他	その他	other	99.9
+0600	幻想曲抜萃	幻想曲抜萃	tasofro	1.0
+0601	全人類ノ天楽録	全人類ノ天楽録	tasofro	2.0
+0602	核熱造神ヒソウテンソク	核熱造神ヒソウテンソク	tasofro	3.0
+0603	暗黒能楽集・心綺楼	暗黒能楽集・心綺楼	tasofro	4.0
+0604	深秘的楽曲集 宇佐見菫子と秘密の部室	深秘的楽曲集	tasofro	5.0
+0605	深秘的楽曲集・補	深秘的楽曲集	tasofro	6.0
+0606	完全憑依ディスコグラフィ	完全憑依ディスコグラフィ	tasofro	7.0
+0607	強欲な獣のムジカ	強欲な獣のムジカ	tasofro	8.0
+0700	プロジェクト・ジャイアン	プロジェクト・ジャイアン	other	1.0
+0701	東方幻想的音楽	東方幻想的音楽	other	2.0
+0702	秋霜玉	秋霜玉	other	3.0
+0703	稀翁玉	稀翁玉	other	4.0
+0704	トルテルマジック	トルテルマジック	other	5.0
+0705	Cradle - 東方幻樂祀典 -	Cradle - 東方幻樂祀典 -	other	6.0
+0706	黄昏酒場～Uwabami Breakers～	黄昏酒場	other	7.0
+0707	神魔討綺伝 ～ Magus in Mystic Geometries.	神魔討綺伝	other	8.0
+0708	東方幻想麻雀 - Touhou Unreal Mahjong	東方幻想麻雀	other	9.0
+0709	東方オトハナビ	東方オトハナビ	other	10.0
+0799	その他	その他	other	99.9
