@@ -240,3 +240,23 @@ comment on column circles.initial_letter_type is '頭文字の文字種別(symbo
 comment on column circles.initial_letter_detail is '開催日';
 comment on column circles.created_at is '作成日時';
 comment on column circles.updated_at is '更新日時';
+
+create table circle_details (
+    circle_id             text                     not null primary key references circles(id),
+    description           text                     not null default '',
+    url                   text                     not null default '',
+    blog_url              text                     not null default '',
+    twitter_url           text                     not null default '',
+    youtube_channel_url   text                     not null default '',
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  circle_details is 'サークル詳細';
+comment on column circle_details.circle_id is 'サークルID';
+comment on column circle_details.description is '説明';
+comment on column circle_details.url is 'URL';
+comment on column circle_details.blog_url is 'ブログ URL';
+comment on column circle_details.twitter_url is 'Twitter URL';
+comment on column circle_details.youtube_channel_url is 'YouTubeチャンネル URL';
+comment on column circle_details.created_at is '作成日時';
+comment on column circle_details.updated_at is '更新日時';
