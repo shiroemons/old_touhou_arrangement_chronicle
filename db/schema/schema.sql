@@ -89,3 +89,14 @@ comment on column original_song_distribution_service_urls.service is '配信サ�
 comment on column original_song_distribution_service_urls.url is 'URL';
 comment on column original_song_distribution_service_urls.created_at is '作成日時';
 comment on column original_song_distribution_service_urls.updated_at is '更新日時';
+
+create table event_series (
+    id           text                     not null primary key,
+    name         text                     not null unique,
+    created_at   timestamp with time zone not null default current_timestamp,
+    updated_at   timestamp with time zone not null default current_timestamp
+);
+comment on table  event_series is 'イベントシリーズ';
+comment on column event_series.name is '名前';
+comment on column event_series.created_at is '作成日時';
+comment on column event_series.updated_at is '更新日時';
