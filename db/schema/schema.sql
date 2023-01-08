@@ -167,3 +167,17 @@ comment on column sub_events.name is '名前(例: 〇〇 2日目)';
 comment on column sub_events.event_date is '開催日';
 comment on column sub_events.created_at is '作成日時';
 comment on column sub_events.updated_at is '更新日時';
+
+create table sub_event_details (
+    sub_event_id text                     not null primary key references sub_events(id),
+    event_status event_status             not null default 'scheduled'::event_status,
+    description  text                     not null default '',
+    created_at   timestamp with time zone not null default current_timestamp,
+    updated_at   timestamp with time zone not null default current_timestamp
+);
+comment on table  sub_event_details is 'サブイベント詳細';
+comment on column sub_event_details.sub_event_id is 'サブイベントID';
+comment on column sub_event_details.event_status is 'ステータス/scheduled: 開催済み, cancelled: 中止, postpone: 延期(開催日未定), rescheduled: 延期(開催日決定), moved_online: オンライン開催に変更, other: その他/default: scheduled';
+comment on column sub_event_details.description is '説明';
+comment on column sub_event_details.created_at is '作成日時';
+comment on column sub_event_details.updated_at is '更新日時';
