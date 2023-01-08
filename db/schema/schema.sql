@@ -225,3 +225,18 @@ comment on column artist_details.twitter_url is 'Twitter URL';
 comment on column artist_details.youtube_channel_url is 'YouTubeチャンネル URL';
 comment on column artist_details.created_at is '作成日時';
 comment on column artist_details.updated_at is '更新日時';
+
+create table circles (
+    id                    text                     not null primary key,
+    name                  text                     not null,
+    initial_letter_type   initial_letter_type      not null,
+    initial_letter_detail text                     not null,
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  circles is 'サークル';
+comment on column circles.name is '名前';
+comment on column circles.initial_letter_type is '頭文字の文字種別(symbol,number,alphabet,kana,kanji,other)';
+comment on column circles.initial_letter_detail is '開催日';
+comment on column circles.created_at is '作成日時';
+comment on column circles.updated_at is '更新日時';
