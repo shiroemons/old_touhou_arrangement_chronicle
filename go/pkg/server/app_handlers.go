@@ -10,6 +10,7 @@ import (
 
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/generated"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/config"
+	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/loader"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/middleware"
 )
 
@@ -21,10 +22,11 @@ type AppHandlers struct {
 }
 
 // AppHandlersProvider Fx Provider
-func AppHandlersProvider(module generated.Config, logger *zap.Logger, cfg config.Config) *AppHandlers {
+func AppHandlersProvider(module generated.Config, logger *zap.Logger, cfg config.Config, l *loader.Loaders) *AppHandlers {
 	return &AppHandlers{
 		Middlewares: []gin.HandlerFunc{
 			middleware.GinContextToContextMiddleware(),
+			loader.Middleware(l),
 			ginzap.GinzapWithConfig(logger, customGinzapConfig()),
 			ginzap.RecoveryWithZap(logger, true),
 			cors.New(customCorsConfig(cfg)),

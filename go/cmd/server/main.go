@@ -14,6 +14,7 @@ import (
 
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/resolver"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/config"
+	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/loader"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/repository"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/server"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/service"
@@ -40,9 +41,11 @@ func inject() fx.Option {
 		// Provide
 		store.Module,
 		repository.Module,
-		server.Module,
-		resolver.Module,
 		service.Module,
+		loader.InitModule,
+		loader.Module,
+		resolver.Module,
+		server.Module,
 
 		// Invoke
 		server.InvokeModule,

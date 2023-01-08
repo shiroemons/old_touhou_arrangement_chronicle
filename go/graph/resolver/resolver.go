@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/service"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 
@@ -16,17 +17,23 @@ import (
 type Params struct {
 	fx.In
 
-	Logger *zap.Logger
+	Logger          *zap.Logger
+	ProductSrv      *service.ProductService
+	OriginalSongSrv *service.OriginalSongService
 }
 
 type Resolver struct {
 	logger *zap.Logger
+	pSrv   *service.ProductService
+	osSrv  *service.OriginalSongService
 }
 
 // NewResolver Resolver Constructor
 func NewResolver(p Params) *Resolver {
 	return &Resolver{
 		logger: p.Logger,
+		pSrv:   p.ProductSrv,
+		osSrv:  p.OriginalSongSrv,
 	}
 }
 

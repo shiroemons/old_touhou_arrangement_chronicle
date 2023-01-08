@@ -1,28 +1,41 @@
 # GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
 
-type Todo {
+interface Node {
   id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
 }
 
-type User {
-  id: ID!
+enum ProductType {
+  pc98
+  windows
+  zuns_music_collection
+  akyus_untouched_score
+  commercial_books
+  other
+}
+
+type Product implements Node {
+  id: ID! @goField(forceResolver: true)
   name: String!
+  shortName: String!
+  productType: ProductType!
+  seriesNumber: Float!
+}
+
+type OriginalSong implements Node {
+  id: ID! @goField(forceResolver: true)
+  product: Product!
+  name: String!
+  composer: String!
+  arranger: String!
+  trackNumber: Int!
+  original: Boolean!
+  sourceID: String!
 }
 
 type Query {
-  todos: [Todo!]!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
-}
-
-type Mutation {
-  createTodo(input: NewTodo!): Todo!
+  products: [Product!]!
+  originalSongs: [OriginalSong!]!
 }

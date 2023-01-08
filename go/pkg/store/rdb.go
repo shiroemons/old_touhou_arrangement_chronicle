@@ -29,6 +29,8 @@ func PostgresProvider(cfg config.Config, logger *zap.Logger) *bun.DB {
 		// BUNDEBUG=1 logs failed queries
 		// BUNDEBUG=2 logs all queries
 		bundebug.FromEnv("BUNDEBUG"),
+
+		// bundebug.WithWriter(&zapio.Writer{Log: logger}),
 	))
 
 	var v string
