@@ -532,3 +532,16 @@ comment on column tracks_vocalists.track_id is 'トラックID';
 comment on column tracks_vocalists.artist_id is 'ボーカリストID(アーティストID)';
 comment on column tracks_vocalists.created_at is '作成日時';
 comment on column tracks_vocalists.updated_at is '更新日時';
+
+create table tracks_original_songs (
+    track_id         text                     not null references tracks(id),
+    original_song_id text                     not null references original_songs(id),
+    created_at       timestamp with time zone not null default current_timestamp,
+    updated_at       timestamp with time zone not null default current_timestamp,
+    primary key (track_id, original_song_id)
+);
+comment on table  tracks_original_songs is '楽曲原曲';
+comment on column tracks_original_songs.track_id is 'トラックID';
+comment on column tracks_original_songs.original_song_id is '原曲ID';
+comment on column tracks_original_songs.created_at is '作成日時';
+comment on column tracks_original_songs.updated_at is '更新日時';
