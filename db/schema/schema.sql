@@ -454,3 +454,16 @@ comment on column track_isrcs.track_id is 'トラックID';
 comment on column track_isrcs.isrc is 'ISRC(International Standard Recording Code): 国際標準レコーディングコード';
 comment on column track_isrcs.created_at is '作成日時';
 comment on column track_isrcs.updated_at is '更新日時';
+
+create table tracks_arrange_circles (
+    track_id   text                     not null references tracks(id),
+    circle_id  text                     not null references circles(id),
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (track_id, circle_id)
+);
+comment on table  tracks_arrange_circles is '楽曲編曲サークル';
+comment on column tracks_arrange_circles.track_id is 'トラックID';
+comment on column tracks_arrange_circles.circle_id is 'サークルID';
+comment on column tracks_arrange_circles.created_at is '作成日時';
+comment on column tracks_arrange_circles.updated_at is '更新日時';
