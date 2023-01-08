@@ -349,3 +349,18 @@ comment on column album_consignment_shops.shop_price is 'ショップ価格';
 comment on column album_consignment_shops.currency is '通貨(default: JPY)';
 comment on column album_consignment_shops.created_at is '作成日時';
 comment on column album_consignment_shops.updated_at is '更新日時';
+
+create table album_distribution_service_urls (
+    id         text                     not null primary key,
+    album_id   text                     not null references albums(id),
+    service    distribution_service     not null,
+    url        text                     not null,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+comment on table  album_distribution_service_urls is 'アルバム配信サービスURL';
+comment on column album_distribution_service_urls.album_id is 'アルバムID';
+comment on column album_distribution_service_urls.service is '配信サービス';
+comment on column album_distribution_service_urls.url is 'URL';
+comment on column album_distribution_service_urls.created_at is '作成日時';
+comment on column album_distribution_service_urls.updated_at is '更新日時';
