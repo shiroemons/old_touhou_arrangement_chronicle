@@ -315,3 +315,37 @@ comment on column albums_circles.album_id is 'アルバムID';
 comment on column albums_circles.circle_id is 'サークルID';
 comment on column albums_circles.created_at is '作成日時';
 comment on column albums_circles.updated_at is '更新日時';
+
+create type shop as enum (
+    'akiba_hobby',    -- AKIBA-HOBBY
+    'akibaoo',        -- あきばお～
+    'animate',        -- アニメイト
+    'bookmate',       -- ブックメイト
+    'booth',          -- BOOTH
+    'diverse_direct', -- Diverse Direct
+    'grep',           -- グレップ
+    'melonbooks',     -- メロンブックス
+    'tanocstore',     -- TANO*C STORE
+    'toranoana'       -- とらのあな
+);
+
+create table album_consignment_shops (
+    id           text                     not null primary key,
+    album_id     text                     not null references albums(id),
+    shop         shop                     not null,
+    url          text                     not null,
+    included_tax bool                     not null default false,
+    shop_price   numeric                  not null,
+    currency     text                     not null default 'JPY',
+    created_at   timestamp with time zone not null default current_timestamp,
+    updated_at   timestamp with time zone not null default current_timestamp
+);
+comment on table  album_consignment_shops is 'アルバム委託販売ショップ';
+comment on column album_consignment_shops.album_id is 'アルバムID';
+comment on column album_consignment_shops.shop is 'ショップ';
+comment on column album_consignment_shops.url is 'URL';
+comment on column album_consignment_shops.included_tax is '税込みか否か(true: 税込み、false: 税抜き・税別)';
+comment on column album_consignment_shops.shop_price is 'ショップ価格';
+comment on column album_consignment_shops.currency is '通貨(default: JPY)';
+comment on column album_consignment_shops.created_at is '作成日時';
+comment on column album_consignment_shops.updated_at is '更新日時';
