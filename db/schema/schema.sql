@@ -480,3 +480,16 @@ comment on column tracks_composers.track_id is 'トラックID';
 comment on column tracks_composers.artist_id is '作曲者ID(アーティストID)';
 comment on column tracks_composers.created_at is '作成日時';
 comment on column tracks_composers.updated_at is '更新日時';
+
+create table tracks_arrangers (
+    track_id   text                     not null references tracks(id),
+    artist_id  text                     not null references artists(id),
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (track_id, artist_id)
+);
+comment on table  tracks_arrangers is '楽曲編曲者';
+comment on column tracks_arrangers.track_id is 'トラックID';
+comment on column tracks_arrangers.artist_id is '編曲者ID(アーティストID)';
+comment on column tracks_arrangers.created_at is '作成日時';
+comment on column tracks_arrangers.updated_at is '更新日時';
