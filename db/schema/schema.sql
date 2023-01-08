@@ -364,3 +364,17 @@ comment on column album_distribution_service_urls.service is '配信サービス
 comment on column album_distribution_service_urls.url is 'URL';
 comment on column album_distribution_service_urls.created_at is '作成日時';
 comment on column album_distribution_service_urls.updated_at is '更新日時';
+
+create table album_upcs (
+    id         text                     not null primary key,
+    album_id   text                     not null references albums(id),
+    upc        text                     not null,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+create unique index uk_album_upcs_album_id_upc on album_upcs (album_id, upc);
+comment on table  album_upcs is 'アルバムUPC';
+comment on column album_upcs.album_id is 'アルバムID';
+comment on column album_upcs.upc is 'UPC(JAN)コード';
+comment on column album_upcs.created_at is '作成日時';
+comment on column album_upcs.updated_at is '更新日時';
