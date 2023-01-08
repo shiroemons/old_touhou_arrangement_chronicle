@@ -399,3 +399,29 @@ comment on column tracks.release_date is '頒布日(アルバムの頒布日と�
 comment on column tracks.search_enabled is '検索対象とするか(default: true)';
 comment on column tracks.created_at is '作成日時';
 comment on column tracks.updated_at is '更新日時';
+
+create table track_details (
+    track_id              text                     not null primary key references tracks(id),
+    length                integer,
+    bpm                   integer,
+    display_composer      text                     not null default '',
+    display_arranger      text                     not null default '',
+    display_rearranger    text                     not null default '',
+    display_lyricist      text                     not null default '',
+    display_vocalist      text                     not null default '',
+    display_original_song text                     not null default '',
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  track_details is 'トラック詳細';
+comment on column track_details.track_id is 'トラックID';
+comment on column track_details.length is '曲の長さ(秒)';
+comment on column track_details.bpm is 'BPM';
+comment on column track_details.display_composer is '作曲者表示用(1度しか使用しない別名義などで使用する)';
+comment on column track_details.display_arranger is '編曲者表示用(1度しか使用しない別名義などで使用する)';
+comment on column track_details.display_rearranger is '再編曲者表示用(1度しか使用しない別名義などで使用する)';
+comment on column track_details.display_lyricist is '作詞者表示用(1度しか使用しない別名義などで使用する)';
+comment on column track_details.display_vocalist is 'ボーカリスト表示用(1度しか使用しない別名義などで使用する)';
+comment on column track_details.display_original_song is '原曲表示用(東方以外の原曲などで使用する)';
+comment on column track_details.created_at is '作成日時';
+comment on column track_details.updated_at is '更新日時';
