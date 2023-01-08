@@ -425,3 +425,18 @@ comment on column track_details.display_vocalist is 'ボーカリスト表示用
 comment on column track_details.display_original_song is '原曲表示用(東方以外の原曲などで使用する)';
 comment on column track_details.created_at is '作成日時';
 comment on column track_details.updated_at is '更新日時';
+
+create table track_distribution_service_urls (
+    id         text                     not null primary key,
+    track_id   text                     not null references tracks(id),
+    service    distribution_service     not null,
+    url        text                     not null,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+comment on table  track_distribution_service_urls is '楽曲配信サービスURL';
+comment on column track_distribution_service_urls.track_id is 'トラックID';
+comment on column track_distribution_service_urls.service is '配信サービス';
+comment on column track_distribution_service_urls.url is 'URL';
+comment on column track_distribution_service_urls.created_at is '作成日時';
+comment on column track_distribution_service_urls.updated_at is '更新日時';
