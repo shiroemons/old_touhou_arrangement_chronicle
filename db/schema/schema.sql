@@ -378,3 +378,24 @@ comment on column album_upcs.album_id is 'アルバムID';
 comment on column album_upcs.upc is 'UPC(JAN)コード';
 comment on column album_upcs.created_at is '作成日時';
 comment on column album_upcs.updated_at is '更新日時';
+
+create table tracks (
+    id             text                     not null primary key,
+    album_id       text                     not null references albums(id),
+    name           text                     not null,
+    disc_number    integer                  not null default 1,
+    track_number   integer                  not null,
+    release_date   date,
+    search_enabled bool                     not null default true,
+    created_at     timestamp with time zone not null default current_timestamp,
+    updated_at     timestamp with time zone not null default current_timestamp
+);
+comment on table  tracks is 'トラック';
+comment on column tracks.album_id is 'アルバムID';
+comment on column tracks.name is '名前';
+comment on column tracks.disc_number is 'ディスク番号(default: 1)';
+comment on column tracks.track_number is 'トラック番号';
+comment on column tracks.release_date is '頒布日(アルバムの頒布日と異なる場合に使用する)';
+comment on column tracks.search_enabled is '検索対象とするか(default: true)';
+comment on column tracks.created_at is '作成日時';
+comment on column tracks.updated_at is '更新日時';
