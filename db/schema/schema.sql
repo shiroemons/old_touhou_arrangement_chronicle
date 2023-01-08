@@ -281,3 +281,24 @@ comment on column albums.sub_event_id is 'サブイベントID';
 comment on column albums.search_enabled is '検索対象とするか';
 comment on column albums.created_at is '作成日時';
 comment on column albums.updated_at is '更新日時';
+
+create table album_details (
+    album_id       text                     not null primary key references albums(id),
+    catalog_number text                     not null default '',
+    event_price    numeric,
+    currency       text                     not null default 'JPY',
+    credit         text                     not null default '',
+    introduction   text                     not null default '',
+    url            text                     not null default '',
+    created_at     timestamp with time zone not null default current_timestamp,
+    updated_at     timestamp with time zone not null default current_timestamp
+);
+comment on table  album_details is 'アルバム詳細';
+comment on column album_details.album_id is 'アルバムID';
+comment on column album_details.event_price is 'イベント価格';
+comment on column album_details.currency is '通貨(default: JPY)';
+comment on column album_details.credit is 'クレジット';
+comment on column album_details.introduction is '紹介';
+comment on column album_details.url is 'URL';
+comment on column album_details.created_at is '作成日時';
+comment on column album_details.updated_at is '更新日時';
