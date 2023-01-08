@@ -152,3 +152,18 @@ comment on column event_details.url is 'URL';
 comment on column event_details.twitter_url is 'Twitter URL';
 comment on column event_details.created_at is '作成日時';
 comment on column event_details.updated_at is '更新日時';
+
+create table sub_events (
+    id         text                     not null primary key,
+    event_id   text                     not null references events(id),
+    name       text                     not null unique,
+    event_date date                     not null unique,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+comment on table  sub_events is 'サブイベント';
+comment on column sub_events.event_id is 'イベントID';
+comment on column sub_events.name is '名前(例: 〇〇 2日目)';
+comment on column sub_events.event_date is '開催日';
+comment on column sub_events.created_at is '作成日時';
+comment on column sub_events.updated_at is '更新日時';
