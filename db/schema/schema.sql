@@ -545,3 +545,23 @@ comment on column tracks_original_songs.track_id is 'トラックID';
 comment on column tracks_original_songs.original_song_id is '原曲ID';
 comment on column tracks_original_songs.created_at is '作成日時';
 comment on column tracks_original_songs.updated_at is '更新日時';
+
+create type tag_type as enum (
+    'unknown',   -- 不明
+    'genre',     -- ジャンル
+    'ambience',  -- 雰囲気
+    'instrument' -- 楽器
+);
+
+create table tags (
+    id         text                     not null primary key,
+    name       text                     not null,
+    tag_type   tag_type                 not null default 'unknown'::tag_type,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp
+);
+comment on table  tags is 'タグ';
+comment on column tags.name is '名前';
+comment on column tags.tag_type is 'タグ種別';
+comment on column tags.created_at is '作成日時';
+comment on column tags.updated_at is '更新日時';
