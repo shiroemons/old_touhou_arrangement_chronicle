@@ -565,3 +565,18 @@ comment on column tags.name is '名前';
 comment on column tags.tag_type is 'タグ種別';
 comment on column tags.created_at is '作成日時';
 comment on column tags.updated_at is '更新日時';
+
+create table albums_genres (
+    album_id   text                     not null references albums(id),
+    tag_id     text                     not null references tags(id),
+    locked     bool                     not null default false,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (album_id, tag_id)
+);
+comment on table  albums_genres is 'アルバムジャンル';
+comment on column albums_genres.album_id is 'アルバムID';
+comment on column albums_genres.tag_id is 'タグID';
+comment on column albums_genres.locked is 'ロック有無(true: ロック・削除不可、false: アンロック)';
+comment on column albums_genres.created_at is '作成日時';
+comment on column albums_genres.updated_at is '更新日時';
