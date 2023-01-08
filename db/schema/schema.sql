@@ -302,3 +302,16 @@ comment on column album_details.introduction is '紹介';
 comment on column album_details.url is 'URL';
 comment on column album_details.created_at is '作成日時';
 comment on column album_details.updated_at is '更新日時';
+
+create table albums_circles (
+    album_id   text                     not null references albums(id),
+    circle_id  text                     not null references circles(id),
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (album_id, circle_id)
+);
+comment on table  albums_circles is 'アルバムとサークルの中間テーブル';
+comment on column albums_circles.album_id is 'アルバムID';
+comment on column albums_circles.circle_id is 'サークルID';
+comment on column albums_circles.created_at is '作成日時';
+comment on column albums_circles.updated_at is '更新日時';
