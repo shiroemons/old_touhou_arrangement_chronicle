@@ -205,3 +205,23 @@ comment on column artists.initial_letter_type is '頭文字の文字種別(symbo
 comment on column artists.initial_letter_detail is '開催日';
 comment on column artists.created_at is '作成日時';
 comment on column artists.updated_at is '更新日時';
+
+create table artist_details (
+    artist_id             text                     not null primary key references artists(id),
+    description           text                     not null default '',
+    url                   text                     not null default '',
+    blog_url              text                     not null default '',
+    twitter_url           text                     not null default '',
+    youtube_channel_url   text                     not null default '',
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  artist_details is 'アーティスト詳細';
+comment on column artist_details.artist_id is 'アーティストID';
+comment on column artist_details.description is '説明';
+comment on column artist_details.url is 'URL';
+comment on column artist_details.blog_url is 'ブログ URL';
+comment on column artist_details.twitter_url is 'Twitter URL';
+comment on column artist_details.youtube_channel_url is 'YouTubeチャンネル URL';
+comment on column artist_details.created_at is '作成日時';
+comment on column artist_details.updated_at is '更新日時';
