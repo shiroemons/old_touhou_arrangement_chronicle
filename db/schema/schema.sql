@@ -260,3 +260,24 @@ comment on column circle_details.twitter_url is 'Twitter URL';
 comment on column circle_details.youtube_channel_url is 'YouTubeチャンネル URL';
 comment on column circle_details.created_at is '作成日時';
 comment on column circle_details.updated_at is '更新日時';
+
+create table albums (
+    id                    text                     not null primary key,
+    name                  text                     not null,
+    release_circle_name   text                     not null default '',
+    release_date          date,
+    event_id              text                     not null default '',
+    sub_event_id          text                     not null default '',
+    search_enabled        bool                     not null default true,
+    created_at            timestamp with time zone not null default current_timestamp,
+    updated_at            timestamp with time zone not null default current_timestamp
+);
+comment on table  albums is 'アルバム';
+comment on column albums.name is '名前';
+comment on column albums.release_circle_name is '頒布サークル名';
+comment on column albums.release_date is '頒布日';
+comment on column albums.event_id is 'イベントID';
+comment on column albums.sub_event_id is 'サブイベントID';
+comment on column albums.search_enabled is '検索対象とするか';
+comment on column albums.created_at is '作成日時';
+comment on column albums.updated_at is '更新日時';
