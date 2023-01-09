@@ -69,6 +69,7 @@ create table product_distribution_service_urls (
     created_at   timestamp with time zone not null default current_timestamp,
     updated_at   timestamp with time zone not null default current_timestamp
 );
+create unique index uk_pdsu_product_id_service on product_distribution_service_urls (product_id, service);
 comment on table  product_distribution_service_urls is '原作(音楽)配信サービスURL';
 comment on column product_distribution_service_urls.product_id is '原作ID';
 comment on column product_distribution_service_urls.service is '配信サービス';
