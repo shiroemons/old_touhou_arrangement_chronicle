@@ -10,6 +10,7 @@ import (
 	"github.com/gocarina/gocsv"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/rs/xid"
 	"github.com/spkg/bom"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -39,6 +40,24 @@ type OriginalSong struct {
 	Original    bool   `csv:"is_original" bun:"is_original,notnull"`
 }
 
+type ProductDistributionServiceUrl struct {
+	bun.BaseModel `bun:"table:product_distribution_service_urls,alias:pdsu"`
+
+	ID        string `bun:",pk"`
+	ProductID string `bun:"product_id,nullzero,notnull"`
+	Service   string `bun:"service,nullzero,notnull"`
+	URL       string `bun:"url,nullzero,notnull"`
+}
+
+type PDSUcsv struct {
+	ProductID       string `csv:"product_id"`
+	Name            string `csv:"name"`
+	SpotifyURL      string `csv:"spotify_url"`
+	AppleMusicURL   string `csv:"apple_music_url"`
+	YouTubeMusicURL string `csv:"youtube_music_url"`
+	LineMusicURL    string `csv:"line_music_url"`
+}
+
 func main() {
 	ctx := context.Background()
 	db := initDB()
@@ -53,6 +72,7 @@ func main() {
 
 	importProducts(ctx, db)
 	importOriginalSongs(ctx, db)
+	importPDSU(ctx, db)
 }
 
 func initDB() *bun.DB {
@@ -139,4 +159,61 @@ func importOriginalSongs(ctx context.Context, db *bun.DB) {
 	}
 
 	log.Println("finish original_songs import.")
+}
+
+func importPDSU(ctx context.Context, db *bun.DB) {
+	log.Println("start product_distribution_service_urls import.")
+
+	f, err := os.Open("../db/fixtures/product_distribution_service_urls.tsv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	var lines []PDSUcsv
+	if err = gocsv.UnmarshalFile(f, &lines); err != nil {
+		log.Fatal(err)
+	}
+
+	var pdsus []ProductDistributionServiceUrl
+	for _, l := range lines {
+		am := ProductDistributionServiceUrl{
+			ID:        xid.New().String(),
+			ProductID: l.ProductID,
+			Service:   "apple_music",
+			URL:       l.AppleMusicURL,
+		}
+		lm := ProductDistributionServiceUrl{
+			ID:        xid.New().String(),
+			ProductID: l.ProductID,
+			Service:   "line_music",
+			URL:       l.LineMusicURL,
+		}
+		s := ProductDistributionServiceUrl{
+			ID:        xid.New().String(),
+			ProductID: l.ProductID,
+			Service:   "spotify",
+			URL:       l.SpotifyURL,
+		}
+		ym := ProductDistributionServiceUrl{
+			ID:        xid.New().String(),
+			ProductID: l.ProductID,
+			Service:   "youtube_music",
+			URL:       l.YouTubeMusicURL,
+		}
+		pdsus = append(pdsus, am)
+		pdsus = append(pdsus, lm)
+		pdsus = append(pdsus, s)
+		pdsus = append(pdsus, ym)
+	}
+
+	_, err = db.NewInsert().Model(&pdsus).
+		On("CONFLICT (product_id, service) DO UPDATE").
+		Set("url = EXCLUDED.url").
+		Exec(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("finish product_distribution_service_urls import.")
 }
