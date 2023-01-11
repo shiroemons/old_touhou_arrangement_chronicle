@@ -627,3 +627,18 @@ comment on column tracks_tags.tag_id is 'タグID';
 comment on column tracks_tags.locked is 'ロック有無(true: ロック・削除不可、false: アンロック)';
 comment on column tracks_tags.created_at is '作成日時';
 comment on column tracks_tags.updated_at is '更新日時';
+
+create table circles_tags (
+    circle_id  text                     not null references circles(id),
+    tag_id     text                     not null references tags(id),
+    locked     bool                     not null default false,
+    created_at timestamp with time zone not null default current_timestamp,
+    updated_at timestamp with time zone not null default current_timestamp,
+    primary key (circle_id, tag_id)
+);
+comment on table  circles_tags is 'サークルタグ';
+comment on column circles_tags.circle_id is 'サークルID';
+comment on column circles_tags.tag_id is 'タグID';
+comment on column circles_tags.locked is 'ロック有無(true: ロック、false: アンロック)';
+comment on column circles_tags.created_at is '作成日時';
+comment on column circles_tags.updated_at is '更新日時';
