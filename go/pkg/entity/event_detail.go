@@ -9,7 +9,7 @@ import (
 type EventDetail struct {
 	bun.BaseModel `bun:"table:event_details,alias:ed"`
 
-	EventID     string    `bun:"event_id,nullzero,notnull"`
+	EventID     string    `bun:"event_id,pk,nullzero,notnull"`
 	EventStatus string    `bun:"event_status,nullzero,notnull,default:'scheduled'::event_status"`
 	Format      string    `bun:"format,nullzero,notnull,default:'offline'::event_format"`
 	RegionCode  string    `bun:"region_code,nullzero,notnull,default:'JP'"`
