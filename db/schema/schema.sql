@@ -286,7 +286,7 @@ comment on column albums.updated_at is '更新日時';
 
 create table album_details (
     album_id       text                     not null primary key references albums(id),
-    catalog_number text                     not null default '',
+    album_number   text                     not null default '',
     event_price    numeric,
     currency       text                     not null default 'JPY',
     credit         text                     not null default '',
