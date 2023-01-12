@@ -197,7 +197,7 @@ create table artists (
     id                    text                     not null primary key,
     name                  text                     not null,
     initial_letter_type   initial_letter_type      not null,
-    initial_letter_detail text                     not null,
+    initial_letter_detail text                     not null default '',
     created_at            timestamp with time zone not null default current_timestamp,
     updated_at            timestamp with time zone not null default current_timestamp
 );
