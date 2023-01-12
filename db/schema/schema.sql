@@ -336,7 +336,7 @@ create table album_consignment_shops (
     album_id     text                     not null references albums(id),
     shop         shop                     not null,
     url          text                     not null,
-    included_tax bool                     not null default false,
+    tax_included bool                     not null default false,
     shop_price   numeric                  not null,
     currency     text                     not null default 'JPY',
     created_at   timestamp with time zone not null default current_timestamp,
