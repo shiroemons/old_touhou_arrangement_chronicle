@@ -158,8 +158,8 @@ comment on column event_details.updated_at is '更新日時';
 create table sub_events (
     id         text                     not null primary key,
     event_id   text                     not null references events(id),
-    name       text                     not null unique,
-    event_date date                     not null unique,
+    name       text                     not null,
+    event_date date                     not null,
     created_at timestamp with time zone not null default current_timestamp,
     updated_at timestamp with time zone not null default current_timestamp
 );
