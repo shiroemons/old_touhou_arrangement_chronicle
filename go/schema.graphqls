@@ -1,12 +1,6 @@
 # GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
-directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
-
-interface Node {
-  id: ID!
-}
-
 enum ProductType {
   pc98
   windows
@@ -16,16 +10,16 @@ enum ProductType {
   other
 }
 
-type Product implements Node {
-  id: ID! @goField(forceResolver: true)
+type Product {
+  id: ID!
   name: String!
   shortName: String!
   productType: ProductType!
   seriesNumber: Float!
 }
 
-type OriginalSong implements Node {
-  id: ID! @goField(forceResolver: true)
+type OriginalSong {
+  id: ID!
   product: Product!
   name: String!
   composer: String!

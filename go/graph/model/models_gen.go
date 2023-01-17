@@ -8,11 +8,6 @@ import (
 	"strconv"
 )
 
-type Node interface {
-	IsNode()
-	GetID() string
-}
-
 type OriginalSong struct {
 	ID          string   `json:"id"`
 	Product     *Product `json:"product"`
@@ -24,9 +19,6 @@ type OriginalSong struct {
 	SourceID    string   `json:"sourceID"`
 }
 
-func (OriginalSong) IsNode()            {}
-func (this OriginalSong) GetID() string { return this.ID }
-
 type Product struct {
 	ID           string      `json:"id"`
 	Name         string      `json:"name"`
@@ -34,9 +26,6 @@ type Product struct {
 	ProductType  ProductType `json:"productType"`
 	SeriesNumber float64     `json:"seriesNumber"`
 }
-
-func (Product) IsNode()            {}
-func (this Product) GetID() string { return this.ID }
 
 type ProductType string
 

@@ -37,7 +37,6 @@ type Config struct {
 
 type ResolverRoot interface {
 	OriginalSong() OriginalSongResolver
-	Product() ProductResolver
 	Query() QueryResolver
 }
 
@@ -71,11 +70,7 @@ type ComplexityRoot struct {
 }
 
 type OriginalSongResolver interface {
-	ID(ctx context.Context, obj *model.OriginalSong) (string, error)
 	Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error)
-}
-type ProductResolver interface {
-	ID(ctx context.Context, obj *model.Product) (string, error)
 }
 type QueryResolver interface {
 	Products(ctx context.Context) ([]*model.Product, error)
@@ -257,12 +252,6 @@ var sources = []*ast.Source{
 	{Name: "../../schema.graphqls", Input: `# GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
-directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
-
-interface Node {
-  id: ID!
-}
-
 enum ProductType {
   pc98
   windows
@@ -272,16 +261,16 @@ enum ProductType {
   other
 }
 
-type Product implements Node {
-  id: ID! @goField(forceResolver: true)
+type Product {
+  id: ID!
   name: String!
   shortName: String!
   productType: ProductType!
   seriesNumber: Float!
 }
 
-type OriginalSong implements Node {
-  id: ID! @goField(forceResolver: true)
+type OriginalSong {
+  id: ID!
   product: Product!
   name: String!
   composer: String!
@@ -370,7 +359,7 @@ func (ec *executionContext) _OriginalSong_id(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.OriginalSong().ID(rctx, obj)
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -391,8 +380,8 @@ func (ec *executionContext) fieldContext_OriginalSong_id(ctx context.Context, fi
 	fc = &graphql.FieldContext{
 		Object:     "OriginalSong",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
 		},
@@ -734,7 +723,7 @@ func (ec *executionContext) _Product_id(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Product().ID(rctx, obj)
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -755,8 +744,8 @@ func (ec *executionContext) fieldContext_Product_id(ctx context.Context, field g
 	fc = &graphql.FieldContext{
 		Object:     "Product",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
 		},
@@ -2964,34 +2953,11 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    ************************** interface.gotpl ***************************
 
-func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj model.Node) graphql.Marshaler {
-	switch obj := (obj).(type) {
-	case nil:
-		return graphql.Null
-	case model.Product:
-		return ec._Product(ctx, sel, &obj)
-	case *model.Product:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._Product(ctx, sel, obj)
-	case model.OriginalSong:
-		return ec._OriginalSong(ctx, sel, &obj)
-	case *model.OriginalSong:
-		if obj == nil {
-			return graphql.Null
-		}
-		return ec._OriginalSong(ctx, sel, obj)
-	default:
-		panic(fmt.Errorf("unexpected type %T", obj))
-	}
-}
-
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
 
-var originalSongImplementors = []string{"OriginalSong", "Node"}
+var originalSongImplementors = []string{"OriginalSong"}
 
 func (ec *executionContext) _OriginalSong(ctx context.Context, sel ast.SelectionSet, obj *model.OriginalSong) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, originalSongImplementors)
@@ -3002,25 +2968,12 @@ func (ec *executionContext) _OriginalSong(ctx context.Context, sel ast.Selection
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("OriginalSong")
 		case "id":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._OriginalSong_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._OriginalSong_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "product":
 			field := field
 
@@ -3094,7 +3047,7 @@ func (ec *executionContext) _OriginalSong(ctx context.Context, sel ast.Selection
 	return out
 }
 
-var productImplementors = []string{"Product", "Node"}
+var productImplementors = []string{"Product"}
 
 func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, obj *model.Product) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, productImplementors)
@@ -3105,52 +3058,39 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Product")
 		case "id":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Product_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Product_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "name":
 
 			out.Values[i] = ec._Product_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "shortName":
 
 			out.Values[i] = ec._Product_shortName(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "productType":
 
 			out.Values[i] = ec._Product_productType(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "seriesNumber":
 
 			out.Values[i] = ec._Product_seriesNumber(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
