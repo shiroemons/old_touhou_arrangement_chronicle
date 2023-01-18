@@ -133,6 +133,7 @@ create type event_format as enum (
 
 create table event_details (
     event_id     text                     not null primary key references events(id),
+    event_dates  daterange,
     event_status event_status             not null default 'scheduled'::event_status,
     format       event_format             not null default 'offline'::event_format,
     region_code  text                     not null default 'JP',
@@ -145,6 +146,7 @@ create table event_details (
 );
 comment on table  event_details is 'イベント詳細';
 comment on column event_details.event_id is 'イベントID';
+comment on column event_details.event_dates is 'イベント開催期間';
 comment on column event_details.event_status is 'ステータス/scheduled: 開催済み, cancelled: 中止, postpone: 延期(開催日未定), rescheduled: 延期(開催日決定), moved_online: オンライン開催に変更, other: その他/default: scheduled';
 comment on column event_details.format is '形式/offline: オフライン開催, online: オフライン開催, mixed: 両方開催/default: offline';
 comment on column event_details.region_code is 'リージョンコード/default: JP';
@@ -159,19 +161,18 @@ create table sub_events (
     id         text                     not null primary key,
     event_id   text                     not null references events(id),
     name       text                     not null,
-    event_date date                     not null,
     created_at timestamp with time zone not null default current_timestamp,
     updated_at timestamp with time zone not null default current_timestamp
 );
 comment on table  sub_events is 'サブイベント';
 comment on column sub_events.event_id is 'イベントID';
 comment on column sub_events.name is '名前(例: 〇〇 2日目)';
-comment on column sub_events.event_date is '開催日';
 comment on column sub_events.created_at is '作成日時';
 comment on column sub_events.updated_at is '更新日時';
 
 create table sub_event_details (
     sub_event_id text                     not null primary key references sub_events(id),
+    event_date   date,
     event_status event_status             not null default 'scheduled'::event_status,
     description  text                     not null default '',
     created_at   timestamp with time zone not null default current_timestamp,
@@ -179,6 +180,7 @@ create table sub_event_details (
 );
 comment on table  sub_event_details is 'サブイベント詳細';
 comment on column sub_event_details.sub_event_id is 'サブイベントID';
+comment on column sub_event_details.event_date is '開催日';
 comment on column sub_event_details.event_status is 'ステータス/scheduled: 開催済み, cancelled: 中止, postpone: 延期(開催日未定), rescheduled: 延期(開催日決定), moved_online: オンライン開催に変更, other: その他/default: scheduled';
 comment on column sub_event_details.description is '説明';
 comment on column sub_event_details.created_at is '作成日時';
@@ -346,7 +348,7 @@ comment on table  album_consignment_shops is 'アルバム委託販売ショッ�
 comment on column album_consignment_shops.album_id is 'アルバムID';
 comment on column album_consignment_shops.shop is 'ショップ';
 comment on column album_consignment_shops.url is 'URL';
-comment on column album_consignment_shops.included_tax is '税込みか否か(true: 税込み、false: 税抜き・税別)';
+comment on column album_consignment_shops.tax_included is '税込みか否か(true: 税込み、false: 税抜き・税別)';
 comment on column album_consignment_shops.shop_price is 'ショップ価格';
 comment on column album_consignment_shops.currency is '通貨(default: JPY)';
 comment on column album_consignment_shops.created_at is '作成日時';
