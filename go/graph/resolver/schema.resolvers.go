@@ -6,11 +6,17 @@ package resolver
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/generated"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/model"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/loader"
 )
+
+// EventSeries is the resolver for the eventSeries field.
+func (r *eventResolver) EventSeries(_ context.Context, _ *model.Event) (*model.EventSeries, error) {
+	panic(fmt.Errorf("not implemented: EventSeries - eventSeries"))
+}
 
 // CreateEventSeries is the resolver for the createEventSeries field.
 func (r *mutationResolver) CreateEventSeries(ctx context.Context, input model.NewEventSeries) (*model.EventSeries, error) {
@@ -19,6 +25,15 @@ func (r *mutationResolver) CreateEventSeries(ctx context.Context, input model.Ne
 		return nil, err
 	}
 	return series.ToGraphQL(), nil
+}
+
+// CreateEvent is the resolver for the createEvent field.
+func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent) (*model.Event, error) {
+	event, err := r.eSrv.New(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return event.ToGraphQL(), nil
 }
 
 // Product is the resolver for the product field.
@@ -48,6 +63,9 @@ func (r *queryResolver) OriginalSongs(ctx context.Context) ([]*model.OriginalSon
 	return os.ToGraphQLs(), nil
 }
 
+// Event returns generated.EventResolver implementation.
+func (r *Resolver) Event() generated.EventResolver { return &eventResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -57,6 +75,7 @@ func (r *Resolver) OriginalSong() generated.OriginalSongResolver { return &origi
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type eventResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type originalSongResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

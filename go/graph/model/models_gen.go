@@ -8,9 +8,20 @@ import (
 	"strconv"
 )
 
+type Event struct {
+	ID          string       `json:"id"`
+	Name        string       `json:"name"`
+	EventSeries *EventSeries `json:"eventSeries"`
+}
+
 type EventSeries struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+type NewEvent struct {
+	EventSeriesID string `json:"eventSeriesID"`
+	Name          string `json:"name"`
 }
 
 type NewEventSeries struct {

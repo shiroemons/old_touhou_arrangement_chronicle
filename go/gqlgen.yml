@@ -66,3 +66,7 @@ models:
     fields:
       product:
         resolver: true
+  Event:
+    fields:
+      eventSeries:
+        resolver: true

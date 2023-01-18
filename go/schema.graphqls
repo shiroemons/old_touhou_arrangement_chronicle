@@ -34,6 +34,12 @@ type EventSeries {
   name: String!
 }
 
+type Event {
+  id: ID!
+  name: String!
+  eventSeries: EventSeries!
+}
+
 type Query {
   products: [Product!]!
   originalSongs: [OriginalSong!]!
@@ -43,6 +49,12 @@ input NewEventSeries {
   name: String!
 }
 
+input NewEvent {
+  eventSeriesID: String!
+  name: String!
+}
+
 type Mutation {
   createEventSeries(input: NewEventSeries!): EventSeries!
+  createEvent(input: NewEvent!): Event!
 }
