@@ -8,6 +8,15 @@ import (
 	"strconv"
 )
 
+type EventSeries struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type NewEventSeries struct {
+	Name string `json:"name"`
+}
+
 type OriginalSong struct {
 	ID          string   `json:"id"`
 	Product     *Product `json:"product"`

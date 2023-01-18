@@ -29,7 +29,20 @@ type OriginalSong {
   sourceID: String!
 }
 
+type EventSeries {
+  id: ID!
+  name: String!
+}
+
 type Query {
   products: [Product!]!
   originalSongs: [OriginalSong!]!
+}
+
+input NewEventSeries {
+  name: String!
+}
+
+type Mutation {
+  createEventSeries(input: NewEventSeries!): EventSeries!
 }

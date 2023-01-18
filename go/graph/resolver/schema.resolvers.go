@@ -12,6 +12,15 @@ import (
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/loader"
 )
 
+// CreateEventSeries is the resolver for the createEventSeries field.
+func (r *mutationResolver) CreateEventSeries(ctx context.Context, input model.NewEventSeries) (*model.EventSeries, error) {
+	series, err := r.esSrv.New(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return series.ToGraphQL(), nil
+}
+
 // Product is the resolver for the product field.
 func (r *originalSongResolver) Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error) {
 	product, err := loader.LoadProduct(ctx, obj.Product.ID)
@@ -39,11 +48,15 @@ func (r *queryResolver) OriginalSongs(ctx context.Context) ([]*model.OriginalSon
 	return os.ToGraphQLs(), nil
 }
 
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
 // OriginalSong returns generated.OriginalSongResolver implementation.
 func (r *Resolver) OriginalSong() generated.OriginalSongResolver { return &originalSongResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type originalSongResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
