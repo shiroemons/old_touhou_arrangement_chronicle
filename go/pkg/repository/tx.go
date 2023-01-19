@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/ctxkey"
 	"github.com/uptrace/bun"
+
+	"github.com/shiroemons/touhou_arrangement_chronicle/go/pkg/ctxkey"
 )
 
 type TxRepository struct {
