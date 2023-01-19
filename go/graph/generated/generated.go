@@ -60,6 +60,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateEvent       func(childComplexity int, input model.NewEvent) int
 		CreateEventSeries func(childComplexity int, input model.NewEventSeries) int
+		CreateSubEvent    func(childComplexity int, input model.NewSubEvent) int
 	}
 
 	OriginalSong struct {
@@ -85,6 +86,12 @@ type ComplexityRoot struct {
 		OriginalSongs func(childComplexity int) int
 		Products      func(childComplexity int) int
 	}
+
+	SubEvent struct {
+		Event func(childComplexity int) int
+		ID    func(childComplexity int) int
+		Name  func(childComplexity int) int
+	}
 }
 
 type EventResolver interface {
@@ -93,6 +100,7 @@ type EventResolver interface {
 type MutationResolver interface {
 	CreateEventSeries(ctx context.Context, input model.NewEventSeries) (*model.EventSeries, error)
 	CreateEvent(ctx context.Context, input model.NewEvent) (*model.Event, error)
+	CreateSubEvent(ctx context.Context, input model.NewSubEvent) (*model.SubEvent, error)
 }
 type OriginalSongResolver interface {
 	Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error)
@@ -175,6 +183,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateEventSeries(childComplexity, args["input"].(model.NewEventSeries)), true
+
+	case "Mutation.createSubEvent":
+		if e.complexity.Mutation.CreateSubEvent == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSubEvent_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSubEvent(childComplexity, args["input"].(model.NewSubEvent)), true
 
 	case "OriginalSong.arranger":
 		if e.complexity.OriginalSong.Arranger == nil {
@@ -281,6 +301,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Products(childComplexity), true
 
+	case "SubEvent.event":
+		if e.complexity.SubEvent.Event == nil {
+			break
+		}
+
+		return e.complexity.SubEvent.Event(childComplexity), true
+
+	case "SubEvent.id":
+		if e.complexity.SubEvent.ID == nil {
+			break
+		}
+
+		return e.complexity.SubEvent.ID(childComplexity), true
+
+	case "SubEvent.name":
+		if e.complexity.SubEvent.Name == nil {
+			break
+		}
+
+		return e.complexity.SubEvent.Name(childComplexity), true
+
 	}
 	return 0, false
 }
@@ -291,6 +332,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNewEvent,
 		ec.unmarshalInputNewEventSeries,
+		ec.unmarshalInputNewSubEvent,
 	)
 	first := true
 
@@ -393,6 +435,12 @@ type Event {
   eventSeries: EventSeries!
 }
 
+type SubEvent {
+  id: ID!
+  event: Event!
+  name: String!
+}
+
 type Query {
   products: [Product!]!
   originalSongs: [OriginalSong!]!
@@ -407,9 +455,15 @@ input NewEvent {
   name: String!
 }
 
+input NewSubEvent {
+  eventID: String!
+  name: String!
+}
+
 type Mutation {
   createEventSeries(input: NewEventSeries!): EventSeries!
   createEvent(input: NewEvent!): Event!
+  createSubEvent(input: NewSubEvent!): SubEvent!
 }
 `, BuiltIn: false},
 }
@@ -441,6 +495,21 @@ func (ec *executionContext) field_Mutation_createEvent_args(ctx context.Context,
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNNewEvent2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewEvent(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createSubEvent_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewSubEvent
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewSubEvent2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewSubEvent(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -846,6 +915,69 @@ func (ec *executionContext) fieldContext_Mutation_createEvent(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createEvent_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createSubEvent(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createSubEvent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateSubEvent(rctx, fc.Args["input"].(model.NewSubEvent))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SubEvent)
+	fc.Result = res
+	return ec.marshalNSubEvent2ᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐSubEvent(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createSubEvent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_SubEvent_id(ctx, field)
+			case "event":
+				return ec.fieldContext_SubEvent_event(ctx, field)
+			case "name":
+				return ec.fieldContext_SubEvent_name(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SubEvent", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createSubEvent_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -1678,6 +1810,146 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SubEvent_id(ctx context.Context, field graphql.CollectedField, obj *model.SubEvent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SubEvent_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SubEvent_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SubEvent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SubEvent_event(ctx context.Context, field graphql.CollectedField, obj *model.SubEvent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SubEvent_event(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Event, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Event)
+	fc.Result = res
+	return ec.marshalNEvent2ᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐEvent(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SubEvent_event(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SubEvent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Event_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Event_name(ctx, field)
+			case "eventSeries":
+				return ec.fieldContext_Event_eventSeries(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Event", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SubEvent_name(ctx context.Context, field graphql.CollectedField, obj *model.SubEvent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SubEvent_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SubEvent_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SubEvent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -3520,6 +3792,42 @@ func (ec *executionContext) unmarshalInputNewEventSeries(ctx context.Context, ob
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewSubEvent(ctx context.Context, obj interface{}) (model.NewSubEvent, error) {
+	var it model.NewSubEvent
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"eventID", "name"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "eventID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("eventID"))
+			it.EventID, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3650,6 +3958,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createEvent(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createSubEvent":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createSubEvent(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -3889,6 +4206,48 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				return ec._Query___schema(ctx, field)
 			})
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var subEventImplementors = []string{"SubEvent"}
+
+func (ec *executionContext) _SubEvent(ctx context.Context, sel ast.SelectionSet, obj *model.SubEvent) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, subEventImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SubEvent")
+		case "id":
+
+			out.Values[i] = ec._SubEvent_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "event":
+
+			out.Values[i] = ec._SubEvent_event(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+
+			out.Values[i] = ec._SubEvent_name(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4316,6 +4675,11 @@ func (ec *executionContext) unmarshalNNewEventSeries2githubᚗcomᚋshiroemons�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNNewSubEvent2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewSubEvent(ctx context.Context, v interface{}) (model.NewSubEvent, error) {
+	res, err := ec.unmarshalInputNewSubEvent(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNOriginalSong2ᚕᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐOriginalSongᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.OriginalSong) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -4451,6 +4815,20 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNSubEvent2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐSubEvent(ctx context.Context, sel ast.SelectionSet, v model.SubEvent) graphql.Marshaler {
+	return ec._SubEvent(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSubEvent2ᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐSubEvent(ctx context.Context, sel ast.SelectionSet, v *model.SubEvent) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._SubEvent(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {

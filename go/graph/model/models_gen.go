@@ -28,6 +28,11 @@ type NewEventSeries struct {
 	Name string `json:"name"`
 }
 
+type NewSubEvent struct {
+	EventID string `json:"eventID"`
+	Name    string `json:"name"`
+}
+
 type OriginalSong struct {
 	ID          string   `json:"id"`
 	Product     *Product `json:"product"`
@@ -45,6 +50,12 @@ type Product struct {
 	ShortName    string      `json:"shortName"`
 	ProductType  ProductType `json:"productType"`
 	SeriesNumber float64     `json:"seriesNumber"`
+}
+
+type SubEvent struct {
+	ID    string `json:"id"`
+	Event *Event `json:"event"`
+	Name  string `json:"name"`
 }
 
 type ProductType string

@@ -39,6 +39,15 @@ func (r *mutationResolver) CreateEvent(ctx context.Context, input model.NewEvent
 	return event.ToGraphQL(), nil
 }
 
+// CreateSubEvent is the resolver for the createSubEvent field.
+func (r *mutationResolver) CreateSubEvent(ctx context.Context, input model.NewSubEvent) (*model.SubEvent, error) {
+	sub, err := r.seSrv.New(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return sub.ToGraphQL(), nil
+}
+
 // Product is the resolver for the product field.
 func (r *originalSongResolver) Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error) {
 	product, err := loader.LoadProduct(ctx, obj.Product.ID)
