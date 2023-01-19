@@ -70,3 +70,7 @@ models:
     fields:
       eventSeries:
         resolver: true
+  SubEvent:
+    fields:
+      event:
+        resolver: true

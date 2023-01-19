@@ -13,4 +13,5 @@ type EventService interface {
 
 type EventRepository interface {
 	Create(ctx context.Context, event *entity.Event) error
+	GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.Event, error)
 }

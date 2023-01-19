@@ -75,6 +75,15 @@ func (r *queryResolver) OriginalSongs(ctx context.Context) ([]*model.OriginalSon
 	return os.ToGraphQLs(), nil
 }
 
+// Event is the resolver for the event field.
+func (r *subEventResolver) Event(ctx context.Context, obj *model.SubEvent) (*model.Event, error) {
+	event, err := loader.LoadEvent(ctx, obj.Event.ID)
+	if err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
 // Event returns generated.EventResolver implementation.
 func (r *Resolver) Event() generated.EventResolver { return &eventResolver{r} }
 
@@ -87,7 +96,11 @@ func (r *Resolver) OriginalSong() generated.OriginalSongResolver { return &origi
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// SubEvent returns generated.SubEventResolver implementation.
+func (r *Resolver) SubEvent() generated.SubEventResolver { return &subEventResolver{r} }
+
 type eventResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type originalSongResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subEventResolver struct{ *Resolver }

@@ -40,6 +40,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	OriginalSong() OriginalSongResolver
 	Query() QueryResolver
+	SubEvent() SubEventResolver
 }
 
 type DirectiveRoot struct {
@@ -108,6 +109,9 @@ type OriginalSongResolver interface {
 type QueryResolver interface {
 	Products(ctx context.Context) ([]*model.Product, error)
 	OriginalSongs(ctx context.Context) ([]*model.OriginalSong, error)
+}
+type SubEventResolver interface {
+	Event(ctx context.Context, obj *model.SubEvent) (*model.Event, error)
 }
 
 type executableSchema struct {
@@ -1873,7 +1877,7 @@ func (ec *executionContext) _SubEvent_event(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Event, nil
+		return ec.resolvers.SubEvent().Event(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1894,8 +1898,8 @@ func (ec *executionContext) fieldContext_SubEvent_event(ctx context.Context, fie
 	fc = &graphql.FieldContext{
 		Object:     "SubEvent",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -4232,21 +4236,34 @@ func (ec *executionContext) _SubEvent(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._SubEvent_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "event":
+			field := field
 
-			out.Values[i] = ec._SubEvent_event(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SubEvent_event(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "name":
 
 			out.Values[i] = ec._SubEvent_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))

@@ -28,7 +28,7 @@ func (es *EventSeriesLoader) BatchGetEventSeries(ctx context.Context, keys datal
 
 	eventSeriesByID, err := es.esRepo.GetMapInIDs(ctx, esIDs)
 	if err != nil {
-		err = fmt.Errorf("fail get products, %w", err)
+		err = fmt.Errorf("fail get event series, %w", err)
 		log.Printf("%v\n", err)
 		return nil
 	}
