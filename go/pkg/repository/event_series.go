@@ -22,3 +22,18 @@ func (es *EventSeriesRepository) Create(ctx context.Context, series *entity.Even
 	}
 	return nil
 }
+
+func (es *EventSeriesRepository) GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.EventSeries, error) {
+	eventSeries := make([]*entity.EventSeries, 0)
+	err := es.db.NewSelect().Model(&eventSeries).Where("id IN (?)", bun.In(ids)).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	eventSeriesById := map[string]*entity.EventSeries{}
+	for _, series := range eventSeries {
+		s := series
+		eventSeriesById[s.ID] = s
+	}
+	return eventSeriesById, nil
+}

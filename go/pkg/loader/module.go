@@ -6,6 +6,7 @@ import (
 
 var InitModule = fx.Provide(
 	ProductLoaderProvider,
+	EventSeriesLoaderProvider,
 )
 
 var Module = fx.Provide(

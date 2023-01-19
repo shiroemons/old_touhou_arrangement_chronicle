@@ -13,4 +13,5 @@ type EventSeriesService interface {
 
 type EventSeriesRepository interface {
 	Create(ctx context.Context, series *entity.EventSeries) error
+	GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.EventSeries, error)
 }

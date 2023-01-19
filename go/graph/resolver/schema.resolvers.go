@@ -6,7 +6,6 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/generated"
 	"github.com/shiroemons/touhou_arrangement_chronicle/go/graph/model"
@@ -14,8 +13,12 @@ import (
 )
 
 // EventSeries is the resolver for the eventSeries field.
-func (r *eventResolver) EventSeries(_ context.Context, _ *model.Event) (*model.EventSeries, error) {
-	panic(fmt.Errorf("not implemented: EventSeries - eventSeries"))
+func (r *eventResolver) EventSeries(ctx context.Context, obj *model.Event) (*model.EventSeries, error) {
+	eventSeries, err := loader.LoadEventSeries(ctx, obj.EventSeries.ID)
+	if err != nil {
+		return nil, err
+	}
+	return eventSeries, nil
 }
 
 // CreateEventSeries is the resolver for the createEventSeries field.

@@ -37,3 +37,13 @@ func (es *EventSeries) ToGraphQL() *model.EventSeries {
 		Name: es.Name,
 	}
 }
+
+type EventSeriesList []*EventSeries
+
+func (arr EventSeriesList) ToGraphQLs() []*model.EventSeries {
+	res := make([]*model.EventSeries, len(arr))
+	for i, es := range arr {
+		res[i] = es.ToGraphQL()
+	}
+	return res
+}
