@@ -21,20 +21,20 @@ type EventSeries struct {
 
 var _ bun.BeforeAppendModelHook = (*EventSeries)(nil)
 
-func (es *EventSeries) BeforeAppendModel(_ context.Context, query bun.Query) error {
+func (e *EventSeries) BeforeAppendModel(_ context.Context, query bun.Query) error {
 	switch query.(type) {
 	case *bun.InsertQuery:
-		if es.ID == "" {
-			es.ID = xid.New().String()
+		if e.ID == "" {
+			e.ID = xid.New().String()
 		}
 	}
 	return nil
 }
 
-func (es *EventSeries) ToGraphQL() *model.EventSeries {
+func (e *EventSeries) ToGraphQL() *model.EventSeries {
 	return &model.EventSeries{
-		ID:   es.ID,
-		Name: es.Name,
+		ID:   e.ID,
+		Name: e.Name,
 	}
 }
 

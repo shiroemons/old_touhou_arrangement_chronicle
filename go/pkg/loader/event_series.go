@@ -20,13 +20,13 @@ func EventSeriesLoaderProvider(esRepo domain.EventSeriesRepository) *EventSeries
 	return &EventSeriesLoader{esRepo: esRepo}
 }
 
-func (es *EventSeriesLoader) BatchGetEventSeries(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+func (l *EventSeriesLoader) BatchGetEventSeries(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	esIDs := make([]string, len(keys))
 	for ix, key := range keys {
 		esIDs[ix] = key.String()
 	}
 
-	eventSeriesByID, err := es.esRepo.GetMapInIDs(ctx, esIDs)
+	eventSeriesByID, err := l.esRepo.GetMapInIDs(ctx, esIDs)
 	if err != nil {
 		err = fmt.Errorf("fail get event series, %w", err)
 		log.Printf("%v\n", err)

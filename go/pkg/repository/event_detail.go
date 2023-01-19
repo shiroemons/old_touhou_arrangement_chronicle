@@ -17,7 +17,7 @@ func EventDetailRepositoryProvider(db *bun.DB) *EventDetailRepository {
 	return &EventDetailRepository{db: db}
 }
 
-func (ed *EventDetailRepository) Create(ctx context.Context, eventDetail *entity.EventDetail) error {
+func (r *EventDetailRepository) Create(ctx context.Context, eventDetail *entity.EventDetail) error {
 	tx, ok := ctx.Value(ctxkey.TxCtxKey).(*bun.Tx)
 	if ok {
 		if _, err := tx.NewInsert().Model(eventDetail).Exec(ctx); err != nil {
@@ -25,7 +25,7 @@ func (ed *EventDetailRepository) Create(ctx context.Context, eventDetail *entity
 		}
 		return nil
 	}
-	if _, err := ed.db.NewInsert().Model(eventDetail).Exec(ctx); err != nil {
+	if _, err := r.db.NewInsert().Model(eventDetail).Exec(ctx); err != nil {
 		return err
 	}
 	return nil

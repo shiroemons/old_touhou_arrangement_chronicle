@@ -20,13 +20,13 @@ func EventLoaderProvider(eRepo domain.EventRepository) *EventLoader {
 	return &EventLoader{eRepo: eRepo}
 }
 
-func (e *EventLoader) BatchGetEvent(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+func (l *EventLoader) BatchGetEvent(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	eIDs := make([]string, len(keys))
 	for ix, key := range keys {
 		eIDs[ix] = key.String()
 	}
 
-	eventSeriesByID, err := e.eRepo.GetMapInIDs(ctx, eIDs)
+	eventSeriesByID, err := l.eRepo.GetMapInIDs(ctx, eIDs)
 	if err != nil {
 		err = fmt.Errorf("fail get events, %w", err)
 		log.Printf("%v\n", err)

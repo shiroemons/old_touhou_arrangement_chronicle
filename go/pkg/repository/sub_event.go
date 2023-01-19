@@ -17,7 +17,7 @@ func SubEventRepositoryProvider(db *bun.DB) *SubEventRepository {
 	return &SubEventRepository{db: db}
 }
 
-func (se *SubEventRepository) Create(ctx context.Context, subEvent *entity.SubEvent) error {
+func (r *SubEventRepository) Create(ctx context.Context, subEvent *entity.SubEvent) error {
 	tx, ok := ctx.Value(ctxkey.TxCtxKey).(*bun.Tx)
 	if ok {
 		if _, err := tx.NewInsert().Model(subEvent).Exec(ctx); err != nil {
@@ -26,7 +26,7 @@ func (se *SubEventRepository) Create(ctx context.Context, subEvent *entity.SubEv
 		return nil
 	}
 
-	if _, err := se.db.NewInsert().Model(subEvent).Exec(ctx); err != nil {
+	if _, err := r.db.NewInsert().Model(subEvent).Exec(ctx); err != nil {
 		return err
 	}
 	return nil

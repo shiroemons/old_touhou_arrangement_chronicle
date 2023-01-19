@@ -22,22 +22,22 @@ type SubEvent struct {
 
 var _ bun.BeforeAppendModelHook = (*SubEvent)(nil)
 
-func (se *SubEvent) BeforeAppendModel(_ context.Context, query bun.Query) error {
+func (e *SubEvent) BeforeAppendModel(_ context.Context, query bun.Query) error {
 	switch query.(type) {
 	case *bun.InsertQuery:
-		if se.ID == "" {
-			se.ID = xid.New().String()
+		if e.ID == "" {
+			e.ID = xid.New().String()
 		}
 	}
 	return nil
 }
 
-func (se *SubEvent) ToGraphQL() *model.SubEvent {
+func (e *SubEvent) ToGraphQL() *model.SubEvent {
 	return &model.SubEvent{
-		ID:   se.ID,
-		Name: se.Name,
+		ID:   e.ID,
+		Name: e.Name,
 		Event: &model.Event{
-			ID: se.EventID,
+			ID: e.EventID,
 		},
 	}
 }

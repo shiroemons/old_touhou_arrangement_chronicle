@@ -15,8 +15,8 @@ func ProductServiceProvider(pRepo domain.ProductRepository) *ProductService {
 	return &ProductService{pRepo: pRepo}
 }
 
-func (srv *ProductService) GetAll(ctx context.Context) (entity.Products, error) {
-	products, err := srv.pRepo.All(ctx)
+func (s *ProductService) GetAll(ctx context.Context) (entity.Products, error) {
+	products, err := s.pRepo.All(ctx)
 	if err != nil {
 		return make([]*entity.Product, 0), SrvErr(ctx, err.Error())
 	}

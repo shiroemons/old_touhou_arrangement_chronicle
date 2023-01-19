@@ -17,7 +17,7 @@ func EventRepositoryProvider(db *bun.DB) *EventRepository {
 	return &EventRepository{db: db}
 }
 
-func (e *EventRepository) Create(ctx context.Context, event *entity.Event) error {
+func (r *EventRepository) Create(ctx context.Context, event *entity.Event) error {
 	tx, ok := ctx.Value(ctxkey.TxCtxKey).(*bun.Tx)
 	if ok {
 		if _, err := tx.NewInsert().Model(event).Exec(ctx); err != nil {
@@ -26,23 +26,23 @@ func (e *EventRepository) Create(ctx context.Context, event *entity.Event) error
 		return nil
 	}
 
-	if _, err := e.db.NewInsert().Model(event).Exec(ctx); err != nil {
+	if _, err := r.db.NewInsert().Model(event).Exec(ctx); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (e *EventRepository) GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.Event, error) {
+func (r *EventRepository) GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.Event, error) {
 	events := make([]*entity.Event, 0)
-	err := e.db.NewSelect().Model(&events).Where("id IN (?)", bun.In(ids)).Scan(ctx)
+	err := r.db.NewSelect().Model(&events).Where("id IN (?)", bun.In(ids)).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	eventById := map[string]*entity.Event{}
 	for _, event := range events {
-		ev := event
-		eventById[ev.ID] = ev
+		e := event
+		eventById[e.ID] = e
 	}
 	return eventById, nil
 }

@@ -15,8 +15,8 @@ func OriginalSongServiceProvider(osRepo domain.OriginalSongRepository) *Original
 	return &OriginalSongService{osRepo: osRepo}
 }
 
-func (srv *OriginalSongService) GetAll(ctx context.Context) (entity.OriginalSongs, error) {
-	products, err := srv.osRepo.All(ctx)
+func (s *OriginalSongService) GetAll(ctx context.Context) (entity.OriginalSongs, error) {
+	products, err := s.osRepo.All(ctx)
 	if err != nil {
 		return make([]*entity.OriginalSong, 0), SrvErr(ctx, err.Error())
 	}

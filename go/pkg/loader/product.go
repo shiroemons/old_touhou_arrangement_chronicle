@@ -20,13 +20,13 @@ func ProductLoaderProvider(pRepo domain.ProductRepository) *ProductLoader {
 	return &ProductLoader{pRepo: pRepo}
 }
 
-func (p *ProductLoader) BatchGetProducts(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+func (l *ProductLoader) BatchGetProducts(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 	productIDs := make([]string, len(keys))
 	for ix, key := range keys {
 		productIDs[ix] = key.String()
 	}
 
-	productByID, err := p.pRepo.GetMapInIDs(ctx, productIDs)
+	productByID, err := l.pRepo.GetMapInIDs(ctx, productIDs)
 	if err != nil {
 		err = fmt.Errorf("fail get products, %w", err)
 		log.Printf("%v\n", err)

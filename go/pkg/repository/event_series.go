@@ -16,16 +16,16 @@ func EventSeriesRepositoryProvider(db *bun.DB) *EventSeriesRepository {
 	return &EventSeriesRepository{db: db}
 }
 
-func (es *EventSeriesRepository) Create(ctx context.Context, series *entity.EventSeries) error {
-	if _, err := es.db.NewInsert().Model(series).Exec(ctx); err != nil {
+func (r *EventSeriesRepository) Create(ctx context.Context, series *entity.EventSeries) error {
+	if _, err := r.db.NewInsert().Model(series).Exec(ctx); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (es *EventSeriesRepository) GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.EventSeries, error) {
+func (r *EventSeriesRepository) GetMapInIDs(ctx context.Context, ids []string) (map[string]*entity.EventSeries, error) {
 	eventSeries := make([]*entity.EventSeries, 0)
-	err := es.db.NewSelect().Model(&eventSeries).Where("id IN (?)", bun.In(ids)).Scan(ctx)
+	err := r.db.NewSelect().Model(&eventSeries).Where("id IN (?)", bun.In(ids)).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

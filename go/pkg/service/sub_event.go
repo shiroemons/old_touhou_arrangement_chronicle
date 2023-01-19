@@ -21,18 +21,18 @@ func SubEventServiceProvider(txRepo domain.TxRepository, seRepo domain.SubEventR
 	return &SubEventService{txRepo: txRepo, seRepo: seRepo, sedRepo: sedRepo}
 }
 
-func (srv *SubEventService) New(ctx context.Context, input model.NewSubEvent) (*entity.SubEvent, error) {
+func (s *SubEventService) New(ctx context.Context, input model.NewSubEvent) (*entity.SubEvent, error) {
 	sub := &entity.SubEvent{
 		EventID: input.EventID,
 		Name:    input.Name,
 	}
-	err := srv.txRepo.DoInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		if err := srv.seRepo.Create(ctx, sub); err != nil {
+	err := s.txRepo.DoInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		if err := s.seRepo.Create(ctx, sub); err != nil {
 			return err
 		}
 
 		detail := &entity.SubEventDetail{SubEventID: sub.ID}
-		if err := srv.sedRepo.Create(ctx, detail); err != nil {
+		if err := s.sedRepo.Create(ctx, detail); err != nil {
 			return err
 		}
 		return nil

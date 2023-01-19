@@ -21,18 +21,18 @@ func EventServiceProvider(txRepo domain.TxRepository, eRepo domain.EventReposito
 	return &EventService{txRepo: txRepo, eRepo: eRepo, edRepo: edRepo}
 }
 
-func (srv *EventService) New(ctx context.Context, input model.NewEvent) (*entity.Event, error) {
+func (s *EventService) New(ctx context.Context, input model.NewEvent) (*entity.Event, error) {
 	event := &entity.Event{
 		Name:          input.Name,
 		EventSeriesID: input.EventSeriesID,
 	}
-	err := srv.txRepo.DoInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
-		if err := srv.eRepo.Create(ctx, event); err != nil {
+	err := s.txRepo.DoInTx(ctx, &sql.TxOptions{}, func(ctx context.Context, tx bun.Tx) error {
+		if err := s.eRepo.Create(ctx, event); err != nil {
 			return err
 		}
 
 		detail := &entity.EventDetail{EventID: event.ID}
-		if err := srv.edRepo.Create(ctx, detail); err != nil {
+		if err := s.edRepo.Create(ctx, detail); err != nil {
 			return err
 		}
 		return nil

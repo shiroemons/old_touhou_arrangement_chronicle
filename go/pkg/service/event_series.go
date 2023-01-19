@@ -16,11 +16,11 @@ func EventSeriesServiceProvider(esRepo domain.EventSeriesRepository) *EventSerie
 	return &EventSeriesService{esRepo: esRepo}
 }
 
-func (srv *EventSeriesService) New(ctx context.Context, input model.NewEventSeries) (*entity.EventSeries, error) {
+func (s *EventSeriesService) New(ctx context.Context, input model.NewEventSeries) (*entity.EventSeries, error) {
 	series := &entity.EventSeries{
 		Name: input.Name,
 	}
-	if err := srv.esRepo.Create(ctx, series); err != nil {
+	if err := s.esRepo.Create(ctx, series); err != nil {
 		return nil, err
 	}
 	return series, nil

@@ -17,8 +17,8 @@ func TxRepositoryProvider(db *bun.DB) *TxRepository {
 	return &TxRepository{db: db}
 }
 
-func (t *TxRepository) DoInTx(ctx context.Context, opts *sql.TxOptions, fn func(ctx context.Context, tx bun.Tx) error) error {
-	tx, err := t.db.BeginTx(ctx, opts)
+func (r *TxRepository) DoInTx(ctx context.Context, opts *sql.TxOptions, fn func(ctx context.Context, tx bun.Tx) error) error {
+	tx, err := r.db.BeginTx(ctx, opts)
 	if err != nil {
 		return err
 	}
