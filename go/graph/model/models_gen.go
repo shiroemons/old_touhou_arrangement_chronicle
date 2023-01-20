@@ -15,6 +15,13 @@ type Artist struct {
 	InitialLetterDetail string `json:"initialLetterDetail"`
 }
 
+type Circle struct {
+	ID                  string `json:"id"`
+	Name                string `json:"name"`
+	InitialLetterType   string `json:"initialLetterType"`
+	InitialLetterDetail string `json:"initialLetterDetail"`
+}
+
 type Event struct {
 	ID          string       `json:"id"`
 	Name        string       `json:"name"`
@@ -27,6 +34,10 @@ type EventSeries struct {
 }
 
 type NewArtist struct {
+	Name string `json:"name"`
+}
+
+type NewCircle struct {
 	Name string `json:"name"`
 }
 

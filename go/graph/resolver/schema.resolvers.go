@@ -57,6 +57,15 @@ func (r *mutationResolver) CreateArtist(ctx context.Context, input model.NewArti
 	return artist.ToGraphQL(), nil
 }
 
+// CreateCircle is the resolver for the createCircle field.
+func (r *mutationResolver) CreateCircle(ctx context.Context, input model.NewCircle) (*model.Circle, error) {
+	circle, err := r.cSrv.New(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return circle.ToGraphQL(), nil
+}
+
 // Product is the resolver for the product field.
 func (r *originalSongResolver) Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error) {
 	product, err := loader.LoadProduct(ctx, obj.Product.ID)

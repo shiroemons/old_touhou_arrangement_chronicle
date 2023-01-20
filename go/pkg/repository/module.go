@@ -17,4 +17,6 @@ var Module = fx.Provide(
 	fx.Annotate(SubEventDetailRepositoryProvider, fx.As(new(domain.SubEventDetailRepository))),
 	fx.Annotate(ArtistRepositoryProvider, fx.As(new(domain.ArtistRepository))),
 	fx.Annotate(ArtistDetailRepositoryProvider, fx.As(new(domain.ArtistDetailRepository))),
+	fx.Annotate(CircleRepositoryProvider, fx.As(new(domain.CircleRepository))),
+	fx.Annotate(CircleDetailRepositoryProvider, fx.As(new(domain.CircleDetailRepository))),
 )

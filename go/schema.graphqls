@@ -53,6 +53,13 @@ type Artist {
   initialLetterDetail: String!
 }
 
+type Circle {
+  id: ID!
+  name: String!
+  initialLetterType: String!
+  initialLetterDetail: String!
+}
+
 type Query {
   products: [Product!]!
   originalSongs: [OriginalSong!]!
@@ -76,9 +83,14 @@ input NewArtist {
   name: String!
 }
 
+input NewCircle {
+  name: String!
+}
+
 type Mutation {
   createEventSeries(input: NewEventSeries!): EventSeries!
   createEvent(input: NewEvent!): Event!
   createSubEvent(input: NewSubEvent!): SubEvent!
   createArtist(input: NewArtist!): Artist!
+  createCircle(input: NewCircle!): Circle!
 }

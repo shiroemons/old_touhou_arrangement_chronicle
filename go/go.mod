@@ -24,6 +24,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.10.0
 	go.uber.org/fx v1.19.0
 	go.uber.org/zap v1.24.0
+	golang.org/x/text v0.5.0
 )
 
 require (
@@ -67,7 +68,6 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/tools v0.1.12 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

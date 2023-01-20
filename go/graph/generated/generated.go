@@ -54,6 +54,13 @@ type ComplexityRoot struct {
 		Name                func(childComplexity int) int
 	}
 
+	Circle struct {
+		ID                  func(childComplexity int) int
+		InitialLetterDetail func(childComplexity int) int
+		InitialLetterType   func(childComplexity int) int
+		Name                func(childComplexity int) int
+	}
+
 	Event struct {
 		EventSeries func(childComplexity int) int
 		ID          func(childComplexity int) int
@@ -67,6 +74,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		CreateArtist      func(childComplexity int, input model.NewArtist) int
+		CreateCircle      func(childComplexity int, input model.NewCircle) int
 		CreateEvent       func(childComplexity int, input model.NewEvent) int
 		CreateEventSeries func(childComplexity int, input model.NewEventSeries) int
 		CreateSubEvent    func(childComplexity int, input model.NewSubEvent) int
@@ -111,6 +119,7 @@ type MutationResolver interface {
 	CreateEvent(ctx context.Context, input model.NewEvent) (*model.Event, error)
 	CreateSubEvent(ctx context.Context, input model.NewSubEvent) (*model.SubEvent, error)
 	CreateArtist(ctx context.Context, input model.NewArtist) (*model.Artist, error)
+	CreateCircle(ctx context.Context, input model.NewCircle) (*model.Circle, error)
 }
 type OriginalSongResolver interface {
 	Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error)
@@ -166,6 +175,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Artist.Name(childComplexity), true
 
+	case "Circle.id":
+		if e.complexity.Circle.ID == nil {
+			break
+		}
+
+		return e.complexity.Circle.ID(childComplexity), true
+
+	case "Circle.initialLetterDetail":
+		if e.complexity.Circle.InitialLetterDetail == nil {
+			break
+		}
+
+		return e.complexity.Circle.InitialLetterDetail(childComplexity), true
+
+	case "Circle.initialLetterType":
+		if e.complexity.Circle.InitialLetterType == nil {
+			break
+		}
+
+		return e.complexity.Circle.InitialLetterType(childComplexity), true
+
+	case "Circle.name":
+		if e.complexity.Circle.Name == nil {
+			break
+		}
+
+		return e.complexity.Circle.Name(childComplexity), true
+
 	case "Event.eventSeries":
 		if e.complexity.Event.EventSeries == nil {
 			break
@@ -212,6 +249,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateArtist(childComplexity, args["input"].(model.NewArtist)), true
+
+	case "Mutation.createCircle":
+		if e.complexity.Mutation.CreateCircle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createCircle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateCircle(childComplexity, args["input"].(model.NewCircle)), true
 
 	case "Mutation.createEvent":
 		if e.complexity.Mutation.CreateEvent == nil {
@@ -384,6 +433,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputNewArtist,
+		ec.unmarshalInputNewCircle,
 		ec.unmarshalInputNewEvent,
 		ec.unmarshalInputNewEventSeries,
 		ec.unmarshalInputNewSubEvent,
@@ -502,6 +552,13 @@ type Artist {
   initialLetterDetail: String!
 }
 
+type Circle {
+  id: ID!
+  name: String!
+  initialLetterType: String!
+  initialLetterDetail: String!
+}
+
 type Query {
   products: [Product!]!
   originalSongs: [OriginalSong!]!
@@ -525,11 +582,16 @@ input NewArtist {
   name: String!
 }
 
+input NewCircle {
+  name: String!
+}
+
 type Mutation {
   createEventSeries(input: NewEventSeries!): EventSeries!
   createEvent(input: NewEvent!): Event!
   createSubEvent(input: NewSubEvent!): SubEvent!
   createArtist(input: NewArtist!): Artist!
+  createCircle(input: NewCircle!): Circle!
 }
 `, BuiltIn: false},
 }
@@ -546,6 +608,21 @@ func (ec *executionContext) field_Mutation_createArtist_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNNewArtist2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewArtist(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createCircle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewCircle
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewCircle2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewCircle(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -818,6 +895,182 @@ func (ec *executionContext) _Artist_initialLetterDetail(ctx context.Context, fie
 func (ec *executionContext) fieldContext_Artist_initialLetterDetail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Artist",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Circle_id(ctx context.Context, field graphql.CollectedField, obj *model.Circle) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Circle_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Circle_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Circle",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Circle_name(ctx context.Context, field graphql.CollectedField, obj *model.Circle) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Circle_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Circle_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Circle",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Circle_initialLetterType(ctx context.Context, field graphql.CollectedField, obj *model.Circle) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Circle_initialLetterType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InitialLetterType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Circle_initialLetterType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Circle",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Circle_initialLetterDetail(ctx context.Context, field graphql.CollectedField, obj *model.Circle) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Circle_initialLetterDetail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InitialLetterDetail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Circle_initialLetterDetail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Circle",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1300,6 +1553,71 @@ func (ec *executionContext) fieldContext_Mutation_createArtist(ctx context.Conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createArtist_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createCircle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createCircle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateCircle(rctx, fc.Args["input"].(model.NewCircle))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Circle)
+	fc.Result = res
+	return ec.marshalNCircle2ᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐCircle(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createCircle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Circle_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Circle_name(ctx, field)
+			case "initialLetterType":
+				return ec.fieldContext_Circle_initialLetterType(ctx, field)
+			case "initialLetterDetail":
+				return ec.fieldContext_Circle_initialLetterDetail(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Circle", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createCircle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -4078,6 +4396,34 @@ func (ec *executionContext) unmarshalInputNewArtist(ctx context.Context, obj int
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewCircle(ctx context.Context, obj interface{}) (model.NewCircle, error) {
+	var it model.NewCircle
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewEvent(ctx context.Context, obj interface{}) (model.NewEvent, error) {
 	var it model.NewEvent
 	asMap := map[string]interface{}{}
@@ -4235,6 +4581,55 @@ func (ec *executionContext) _Artist(ctx context.Context, sel ast.SelectionSet, o
 	return out
 }
 
+var circleImplementors = []string{"Circle"}
+
+func (ec *executionContext) _Circle(ctx context.Context, sel ast.SelectionSet, obj *model.Circle) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, circleImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Circle")
+		case "id":
+
+			out.Values[i] = ec._Circle_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+
+			out.Values[i] = ec._Circle_name(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "initialLetterType":
+
+			out.Values[i] = ec._Circle_initialLetterType(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "initialLetterDetail":
+
+			out.Values[i] = ec._Circle_initialLetterDetail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var eventImplementors = []string{"Event"}
 
 func (ec *executionContext) _Event(ctx context.Context, sel ast.SelectionSet, obj *model.Event) graphql.Marshaler {
@@ -4375,6 +4770,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createArtist(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createCircle":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createCircle(ctx, field)
 			})
 
 			if out.Values[i] == graphql.Null {
@@ -5027,6 +5431,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCircle2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐCircle(ctx context.Context, sel ast.SelectionSet, v model.Circle) graphql.Marshaler {
+	return ec._Circle(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCircle2ᚖgithubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐCircle(ctx context.Context, sel ast.SelectionSet, v *model.Circle) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Circle(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNEvent2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐEvent(ctx context.Context, sel ast.SelectionSet, v model.Event) graphql.Marshaler {
 	return ec._Event(ctx, sel, &v)
 }
@@ -5102,6 +5520,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 
 func (ec *executionContext) unmarshalNNewArtist2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewArtist(ctx context.Context, v interface{}) (model.NewArtist, error) {
 	res, err := ec.unmarshalInputNewArtist(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNNewCircle2githubᚗcomᚋshiroemonsᚋtouhou_arrangement_chronicleᚋgoᚋgraphᚋmodelᚐNewCircle(ctx context.Context, v interface{}) (model.NewCircle, error) {
+	res, err := ec.unmarshalInputNewCircle(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
