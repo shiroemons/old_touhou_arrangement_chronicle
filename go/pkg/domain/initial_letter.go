@@ -4,6 +4,8 @@ import (
 	"unicode"
 
 	"github.com/goark/kkconv"
+	"golang.org/x/text/unicode/norm"
+	"golang.org/x/text/width"
 )
 
 type InitialLetterType string
@@ -62,10 +64,14 @@ func runeCheck(r rune) (InitialLetterType, string) {
 		return InitialLetterTypeNumber, ""
 	}
 	if unicode.Is(Hiragana, r) {
-		return InitialLetterTypeHiragana, kkconv.Chokuon(string(r), true)
+		d := kkconv.Chokuon(string(r), true)
+		detail := []rune(width.Widen.String(width.Narrow.String(norm.NFD.String(d))))[0]
+		return InitialLetterTypeHiragana, string(detail)
 	}
 	if unicode.Is(Katakana, r) || unicode.Is(HalfWidthKatakana, r) {
-		return InitialLetterTypeKatakana, kkconv.Hiragana(kkconv.Chokuon(string(r), true), true)
+		d := kkconv.Hiragana(kkconv.Chokuon(string(r), true), true)
+		detail := []rune(width.Widen.String(width.Narrow.String(norm.NFD.String(d))))[0]
+		return InitialLetterTypeKatakana, string(detail)
 	}
 	if unicode.Is(Kanji, r) {
 		return InitialLetterTypeKanji, ""
