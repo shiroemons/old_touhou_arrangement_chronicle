@@ -190,7 +190,8 @@ create type initial_letter_type as enum (
     'symbol',   -- 記号
     'number',   -- 数字
     'alphabet', -- 英字
-    'kana',     -- かな(ひらがな・カタカナ)
+    'hiragana', -- ひらがな
+    'katakana', -- カタカナ
     'kanji',    -- 漢字
     'other'     -- その他
 );
