@@ -8,6 +8,13 @@ import (
 	"strconv"
 )
 
+type Artist struct {
+	ID                  string `json:"id"`
+	Name                string `json:"name"`
+	InitialLetterType   string `json:"initialLetterType"`
+	InitialLetterDetail string `json:"initialLetterDetail"`
+}
+
 type Event struct {
 	ID          string       `json:"id"`
 	Name        string       `json:"name"`
@@ -16,6 +23,10 @@ type Event struct {
 
 type EventSeries struct {
 	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type NewArtist struct {
 	Name string `json:"name"`
 }
 

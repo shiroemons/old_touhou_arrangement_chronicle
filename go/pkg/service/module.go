@@ -10,4 +10,5 @@ var Module = fx.Provide(
 	EventSeriesServiceProvider,
 	EventServiceProvider,
 	SubEventServiceProvider,
+	ArtistServiceProvider,
 )

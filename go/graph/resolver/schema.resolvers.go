@@ -48,6 +48,15 @@ func (r *mutationResolver) CreateSubEvent(ctx context.Context, input model.NewSu
 	return sub.ToGraphQL(), nil
 }
 
+// CreateArtist is the resolver for the createArtist field.
+func (r *mutationResolver) CreateArtist(ctx context.Context, input model.NewArtist) (*model.Artist, error) {
+	artist, err := r.aSrv.New(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	return artist.ToGraphQL(), nil
+}
+
 // Product is the resolver for the product field.
 func (r *originalSongResolver) Product(ctx context.Context, obj *model.OriginalSong) (*model.Product, error) {
 	product, err := loader.LoadProduct(ctx, obj.Product.ID)
